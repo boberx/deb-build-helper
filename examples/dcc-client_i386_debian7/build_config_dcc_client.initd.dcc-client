@@ -1,0 +1,51 @@
+#! /bin/sh
+
+### BEGIN INIT INFO
+# Provides:				dccifd
+# Required-Start:		$network $syslog $time
+# Should-Start:			bind9
+# Required-Stop:
+# Should-Stop:
+# Default-Start:		2 3 4 5
+# Default-Stop:			0 1 6
+# Short-Description:	DCC daemons providing mail filtering
+# Description:			Start dccm, dccifd, and/or dccd to support DCC mail
+#                          filtering via sendmail, postfix, or SpamAssassin
+### END INIT INFO
+
+
+. /etc/default/dcc
+
+
+case "$1" in
+	start)
+		if [ -f $DCC_RUNDIR/dccifd.pid ]; then
+		echo "Already running..."
+		else
+			mkdir -p ${DCC_RUNDIR} && \
+			chown ${DCC_USER}:${DCC_GROUP} ${DCC_RUNDIR} && \
+			chmod 700 ${DCC_RUNDIR} && \
+			${DCC_LIBEXEC}/dccifd ${DCCIFD_ARGS} && \
+			exit 0
+		fi
+		exit 1
+	;;
+	stop)
+		if [ -f $DCC_RUNDIR/dccifd.pid ]; then
+			PID=`cat $DCC_RUNDIR/dccifd.pid | sed 's/-//'`
+			if [ -n "$PID" ]; then
+				kill "$PID"
+				sleep 1s
+			fi
+			if kill -0 "$PID" 2>/dev/null; then
+				sleep 5s
+			fi
+		fi
+		ps ax | awk '{if($5 ~ "dccifd"){if($3 == "Sl"){system("kill -9 " $1)}}}'
+	;;
+	*)
+		echo "Usage: /etc/init.d/dcc-client start|stop"
+		exit 1
+	;;
+esac
+exit 0

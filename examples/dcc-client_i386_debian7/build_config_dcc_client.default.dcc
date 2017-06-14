@@ -1,0 +1,6 @@
+DCC_USER=dccuser
+DCC_GROUP=dccgroup
+DCC_HOMEDIR=/var/lib/dcc
+DCC_LIBEXEC=/usr/local/sbin
+DCC_RUNDIR=/var/run/dcc
+DCCIFD_ARGS="-Q -L info,mail.notice -L error,mail.err -G off -p ${DCC_HOMEDIR}/dccifd -h ${DCC_HOMEDIR} -w ${DCC_HOMEDIR}/whiteclnt -I ${DCC_USER} -R ${DCC_RUNDIR}"

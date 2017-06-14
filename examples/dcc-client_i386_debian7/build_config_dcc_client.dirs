@@ -1,0 +1,7 @@
+etc/init.d
+etc/spamassassin
+etc/default
+var/lib
+var/lib/dcc
+usr/local/sbin
+usr/local/bin

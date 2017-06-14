@@ -1,0 +1,2 @@
+loadplugin Mail::SpamAssassin::Plugin::DCC
+dcc_home /var/lib/dcc
