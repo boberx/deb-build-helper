@@ -2,11 +2,11 @@
 
 #description	:Helper tools for building Debian packages
 #author			:Bober3X
-#Last_revised	:2017.03.10
-#version		:1.8.5
+#Last_revised	:2017.10.05
+#version		:1.8.7
 #===============================================================================
 
-B_APP_S_VERSION="1.8.5";
+B_APP_S_VERSION="1.8.7";
 
 B_APP_CFG_FILE_NAME="build_config.sh";
 B_APP_TMP_FILE_NAME="build_config_tmp.sh";
@@ -347,7 +347,8 @@ app_configure()
 
 		if [ "${APP_AUTOGENSH}" != "false" ]; then
 			if [ -f "./autogen.sh" ]; then
-				./autogen.sh;
+				echo ./autogen.sh "${APP_ACFG_OPTS}";
+				./autogen.sh ${APP_ACFG_OPTS};
 
 				if [ ${?} -ne 0 ]; then
 					echo "Error: autogen.sh return false...";
@@ -359,16 +360,18 @@ app_configure()
 		fi;
 
 		if [[ "${RCODE}" -eq 0 ]]; then
-			if [ -f ""${APP_SRC_DIR}"/configure" ]; then
-				echo "${APP_SRC_DIR}"/configure "${APP_CFG_OPTS}";
-				"${APP_SRC_DIR}"/configure ${APP_CFG_OPTS};
+			if [ "${APP_RUNCONFIGURE}" != "false" ]; then
+				if [ -f ""${APP_SRC_DIR}"/configure" ]; then
+					echo "${APP_SRC_DIR}"/configure "${APP_CFG_OPTS}";
+					"${APP_SRC_DIR}"/configure ${APP_CFG_OPTS};
 
-				if [[ "${?}" -ne 0 ]]; then
-					echo "Error: configure return false...";
-					RCODE=1;
+					if [[ "${?}" -ne 0 ]]; then
+						echo "Error: configure return false...";
+						RCODE=1;
+					fi;
+				else
+					echo "Warning: file \""${APP_SRC_DIR}"/configure\" does not exist...";
 				fi;
-			else
-				echo "Warning: file \""${APP_SRC_DIR}"/configure\" does not exist...";
 			fi;
 		fi;
 	else
