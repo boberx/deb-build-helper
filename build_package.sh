@@ -92,7 +92,7 @@ B_APP_DEB_DIR="${B_APP_WRK_DIR}"/DEB;
 app_get_last_pckg_ver()
 {
 	if ( `apt-cache show "${1}" >/dev/null 2>/dev/null` ); then
-		V=`apt-cache show "${1}" | grep "Version:" | sed 's/Version: //'`;
+		V=`apt-cache show "${1}" | grep "Version:" | head -n 1 | sed 's/Version: //'`;
 		printf "${1} (>= %s)\n" ${V};
 	else
 		echo "Error: Package \""${1}"\" not found...";
